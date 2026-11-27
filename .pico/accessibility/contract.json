@@ -1,0 +1,85 @@
+{
+  "contractVersion": 1,
+  "packageName": "dev.apexmr.prototype",
+  "components": [
+    {
+      "contractId": "entity:aa58747be2226531",
+      "semanticAnchor": "aa58747be2226531",
+      "kind": "entity",
+      "source": {
+        "file": "app/src/main/java/dev/apexmr/prototype/content/HomeStage.kt",
+        "line": 76,
+        "endLine": 76,
+        "symbol": "HomeStage"
+      },
+      "semanticId": "input.seat",
+      "label": "鞍座",
+      "runtimeSelector": {
+        "semanticId": "input.seat"
+      },
+      "stateSources": [
+        "value"
+      ],
+      "actions": [],
+      "binding": {
+        "kind": "spatial",
+        "ownerExpression": "scene.seat",
+        "sdkComponentDeclaration": true,
+        "sdkActionRegistration": true
+      }
+    },
+    {
+      "contractId": "entity:a638a9c33719b4b8",
+      "semanticAnchor": "a638a9c33719b4b8",
+      "kind": "entity",
+      "source": {
+        "file": "app/src/main/java/dev/apexmr/prototype/content/HomeStage.kt",
+        "line": 80,
+        "endLine": 80,
+        "symbol": "HomeStage"
+      },
+      "semanticId": "input.dashboard",
+      "label": "输入验证仪表",
+      "runtimeSelector": {
+        "semanticId": "input.dashboard"
+      },
+      "stateSources": [
+        "value"
+      ],
+      "actions": [],
+      "binding": {
+        "kind": "spatial",
+        "ownerExpression": "scene.instrument",
+        "sdkComponentDeclaration": true,
+        "sdkActionRegistration": true
+      }
+    },
+    {
+      "contractId": "attachment:822468570c0be561",
+      "semanticAnchor": "822468570c0be561",
+      "kind": "attachment",
+      "source": {
+        "file": "app/src/main/java/dev/apexmr/prototype/content/HomeStage.kt",
+        "line": 85,
+        "endLine": 85,
+        "symbol": "HomeStage"
+      },
+      "semanticId": "input.panel",
+      "label": "输入控制面板",
+      "runtimeSelector": {
+        "semanticId": "input.panel"
+      },
+      "stateSources": [
+        "value"
+      ],
+      "actions": [],
+      "binding": {
+        "kind": "spatial",
+        "ownerExpression": "panel",
+        "sdkComponentDeclaration": true,
+        "sdkActionRegistration": true
+      }
+    }
+  ],
+  "unresolved": []
+}
