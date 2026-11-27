@@ -1,10 +1,5 @@
 package dev.apexmr.core.input
 
-import kotlin.math.atan2
-import kotlin.math.cos
-import kotlin.math.hypot
-import kotlin.math.sin
-
 data class BikeFeedback(
     val body: Pose,
     val handles: Pose,
@@ -28,11 +23,8 @@ data class BikeFeedback(
             val left0 = baseRig.toLocal(base.snapshot.left!!.palm.position)
             val right0 = baseRig.toLocal(base.snapshot.right!!.palm.position)
             val line0 = right0 - left0
-            val yaw0 = atan2(line0.z, line0.x)
-            val roll0 = -atan2(line0.y, hypot(line0.x, line0.z))
-            val yawDelta = atan2(sin(atan2(line.z, line.x) - yaw0), cos(atan2(line.z, line.x) - yaw0))
-            val rollDelta = (-atan2(line.y, hypot(line.x, line.z)) - roll0)
-                .coerceIn(-config.handleRollLimitRad, config.handleRollLimitRad)
+            val (yawDelta, measuredRoll) = handleAngles(line0, line)
+            val rollDelta = measuredRoll.coerceIn(-config.handleRollLimitRad, config.handleRollLimitRad)
             val handleRotation = Rotation.axisAngle(Vec3(0.0, 1.0, 0.0),
                 -yawDelta.coerceIn(-config.handleYawLimitRad, config.handleYawLimitRad))
             return BikeFeedback(

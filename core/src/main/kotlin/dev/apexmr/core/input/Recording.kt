@@ -55,10 +55,17 @@ object ReplayRunner {
     }
     @JvmStatic
     fun main(args: Array<String>) {
-        require(args.size == 2) { "ReplayRunner <input.jsonl> <intents.jsonl>" }
+        require(args.size == 2 || (args.size == 3 && args[2] == "--compare")) {
+            "ReplayRunner <input.jsonl> <intents.jsonl> [--compare]"
+        }
         val recording = Recording.decode(File(args[0]).readText())
-        require(verify(recording)) { "Recorded intents do not match replay" }
-        File(args[1]).writeText(run(recording).joinToString("\n", postfix = "\n") { inputJson.encodeToString(it) })
-        println("Replayed ${recording.frames.size} frames; source=${recording.source}")
+        val outputs = run(recording)
+        val mismatches = recording.frames.zip(outputs).count { (frame, actual) ->
+            frame.expectedIntent?.let { !matches(actual, it) } ?: false
+        }
+        require(args.size == 3 || mismatches == 0) { "Recorded intents do not match replay" }
+        File(args[1]).writeText(outputs.joinToString("\n", postfix = "\n") { inputJson.encodeToString(it) })
+        println("Replayed ${recording.frames.size} frames; source=${recording.source}; " +
+            "mode=${if (args.size == 3) "compare" else "strict"}; mismatches=$mismatches")
     }
 }

@@ -18,7 +18,7 @@ internal class RightGestures(private val config: InputConfig) {
         val extended = right.curls.take(2).all { it <= config.extendedCurl } &&
             right.curls.drop(2).all { it >= config.fistCurl }
         val tips = right.fingerTips.map {
-            handle.rotation.inverse().rotate(base.coordinateRig().toLocal(it) - handle.midpoint0) + handle.midpoint0
+            handle.rotation.inverse().rotate(base.coordinateRig().toLocal(it) - handle.midpoint) + handle.midpoint0
         }
         val tip = (tips[0] + tips[1]) * 0.5
         val curl = (right.curls[0] + right.curls[1]) * 0.5

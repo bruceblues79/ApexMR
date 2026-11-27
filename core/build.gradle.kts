@@ -41,5 +41,6 @@ tasks.register<JavaExec>("replay") {
     mainClass.set("dev.apexmr.core.input.ReplayRunner")
     if (project.hasProperty("recording") && project.hasProperty("output")) {
         args(project.property("recording"), project.property("output"))
+        if (project.findProperty("compare") == "true") args("--compare")
     }
 }

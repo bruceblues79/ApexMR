@@ -2,8 +2,11 @@ package dev.apexmr.core.input
 
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.io.TempDir
+import java.nio.file.Path
 
 class InputSafetyTest {
+    @TempDir lateinit var temporary: Path
     private fun hand(x: Double, curls: List<Double> = List(4) { 0.9 }) =
         HandPose(Pose(Vec3(x, 0.3, -0.55)), curls, List(2) { Vec3(x, 0.3, -0.64) })
     private fun frame(t: Double) = HandSnapshot(t, t, hand(-0.23), hand(0.23), Pose(Vec3(0.0, 0.8, 0.0)))
@@ -63,5 +66,25 @@ class InputSafetyTest {
         assertTrue(ReplayRunner.verify(recording))
         assertFalse(ReplayRunner.verify(recording.copy(frames = warmup +
             frame.copy(expectedIntent = expected.copy(leftProximity = expected.leftProximity + 0.1)))))
+    }
+
+    @Test fun `comparison exports new outputs while strict replay rejects older algorithm outputs`() {
+        val engine = engine()
+        val recording = Recording(InputConfig(), engine.calibration!!,
+            listOf(frame(1.0).copy(expectedIntent = RiderIntent(throttle = 1.0))), "swan-real")
+        val input = temporary.resolve("recording.jsonl").toFile()
+        val output = temporary.resolve("intents.jsonl").toFile()
+        input.writeText(recording.encode())
+        assertThrows(IllegalArgumentException::class.java) {
+            ReplayRunner.main(arrayOf(input.path, output.path))
+        }
+        assertFalse(output.exists())
+        ReplayRunner.main(arrayOf(input.path, output.path, "--compare"))
+        val actual = inputJson.decodeFromString<RiderIntent>(output.readText().trim())
+        assertEquals(ReplayRunner.run(recording).single(), actual)
+        assertFalse(ReplayRunner.verify(recording))
+        assertThrows(IllegalArgumentException::class.java) {
+            ReplayRunner.main(arrayOf(input.path, output.path, "--skip"))
+        }
     }
 }

@@ -51,7 +51,7 @@ class HandGeometryTest {
         for (angle in listOf(-0.5, 0.5)) {
             val yaw = Rotation.axisAngle(Vec3(0.0, 1.0, 0.0), -0.3)
             val body = Rotation.axisAngle(Vec3(0.0, 0.0, -1.0), angle)
-            val q = yaw * body
+            val q = body * yaw
             val frame = hands(mid + Vec3(0.06, 0.02, -0.03), q, 0.25)
             val pose = feedback(frame)
             assertPoint(Vec3(), pose.body.position)
@@ -115,8 +115,8 @@ class HandGeometryTest {
 
     @Test fun `feedback limits angles and ignores calibration midpoint offset`() {
         val base = hands()
-        val q = Rotation.axisAngle(Vec3(0.0, 1.0, 0.0), -1.0) *
-            Rotation.axisAngle(Vec3(0.0, 0.0, -1.0), 1.2)
+        val q = Rotation.axisAngle(Vec3(0.0, 0.0, -1.0), 1.2) *
+            Rotation.axisAngle(Vec3(0.0, 1.0, 0.0), -1.0)
         val pose = feedback(hands(mid + Vec3(0.9, 0.0, 0.0), q, 0.45), base)
         assertPoint(Vec3(), pose.body.position)
         assertPoint(mid, pose.handles.position)
